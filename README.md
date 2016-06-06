@@ -1,20 +1,13 @@
-# Advent
+# Advent of Code in Elixir
 
-**TODO: Add description**
+Just a real simple project implementing the [adventofcode.com](http://adventofcode.com).
 
-## Installation
+Be sure to check out the screencasts and code at [learningwithjb.com](learningwithjb.com)
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+Currently implemented:
 
-  1. Add advent to your list of dependencies in `mix.exs`:
+* Day 1
 
-        def deps do
-          [{:advent, "~> 0.0.1"}]
-        end
+Left to do:
 
-  2. Ensure advent is started before your application:
-
-        def application do
-          [applications: [:advent]]
-        end
-
+* Days 2-25
