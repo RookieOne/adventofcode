@@ -6,8 +6,8 @@ Be sure to check out the screencasts and code at [learningwithjb.com](learningwi
 
 Currently implemented:
 
-* Day 1
+* Day 1, 2
 
 Left to do:
 
-* Days 2-25
+* Days 3-25
