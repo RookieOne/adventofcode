@@ -16,7 +16,18 @@ defmodule Advent.DaySix do
   toggle 0,0 through 999,0 would toggle the first line of 1000 lights, turning off the ones that were on, and turning on the ones that were off.
   turn off 499,499 through 500,500 would turn off (or leave off) the middle four lights.
 
-  input looks like: turn on 489,959 through 759,964
+  --- Part Two ---
+
+  You just finish implementing your winning light pattern when you realize you mistranslated Santa's message from Ancient Nordic Elvish.
+
+  The light grid you bought actually has individual brightness controls; each light can have a brightness of zero or more. The lights all start at zero.
+
+  The phrase turn on actually means that you should increase the brightness of those lights by 1.
+
+  The phrase turn off actually means that you should decrease the brightness of those lights by 1, to a minimum of zero.
+
+  The phrase toggle actually means that you should increase the brightness of those lights by 2.
+
   """
 
   def count_lights_with_file(filename) do
@@ -30,18 +41,6 @@ defmodule Advent.DaySix do
       end
     end)
     |> count_lights
-    # {:ok, input} = File.read(filename)
-    # input 
-    # |> String.split("\n")
-    # |> Enum.map(&(_to_commands(&1)))
-    # |> Enum.reduce(%{}, fn instruction, grid ->
-    #   case instruction do
-    #     {:toggle, [start_point, end_point]} -> toggle_lights(grid, start_point, end_point)
-    #     {:turn_on, [start_point, end_point]} -> turn_on_lights(grid, start_point, end_point)
-    #     {:turn_off, [start_point, end_point]} -> turn_off_lights(grid, start_point, end_point)
-    #   end
-    # end)
-    # |> count_lights
   end
   defp _to_commands("toggle " <> string), do: {:toggle, _points(string)}
   defp _to_commands("turn on " <> string), do: {:turn_on, _points(string)}
@@ -122,4 +121,78 @@ defmodule Advent.DaySix do
   defp _toggle(nil), do: true
   defp _toggle(value), do: !value
 
+
+
+  @doc """
+  Turn on lights by increasing the brightness by 1
+  ## Examples
+    iex> Advent.DaySix.turn_on_lights_v2(%{}, {0,0}, {1,1})
+    %{{0, 0} => 1, {0, 1} => 1, {1, 0} => 1, {1, 1} => 1}
+    iex> Advent.DaySix.turn_on_lights_v2(%{}, {0,0}, {2,2})
+    %{{0, 0} => 1, {0, 1} => 1, {0, 2} => 1, {1, 0} => 1, {1, 1} => 1, {1, 2} => 1, {2, 0} => 1, {2, 1} => 1, {2, 2} => 1}
+    iex> Advent.DaySix.turn_on_lights_v2(%{ {2,3} => 1, {0,1} => 0 }, {0,0}, {1,1})
+    %{{0, 0} => 1, {0, 1} => 1, {1, 0} => 1, {1, 1} => 1, {2, 3} => 1}
+    iex> Advent.DaySix.turn_on_lights_v2(%{ {0,0} => 1, {0,1} => 1 }, {0,0}, {1,1})
+    %{{0, 0} => 2, {0, 1} => 2, {1, 0} => 1, {1, 1} => 1}
+  """
+  def turn_on_lights_v2(grid, {startx,starty}, {endx,endy}) do
+    for x <- startx..endx, y <- starty..endy, into: grid, do: { {x,y} , (grid[{x,y}] || 0) + 1 }
+  end
+
+  @doc """
+  Turn off lights by decreasing the brightness by 1 to minimum of zero
+  ## Examples
+    iex> Advent.DaySix.turn_off_lights_v2(%{}, {0,0}, {1,1})
+    %{{0, 0} => 0, {0, 1} => 0, {1, 0} => 0, {1, 1} => 0}
+    iex> Advent.DaySix.turn_off_lights_v2(%{}, {0,0}, {2,2})
+    %{{0, 0} => 0, {0, 1} => 0, {0, 2} => 0, {1, 0} => 0, {1, 1} => 0, {1, 2} => 0, {2, 0} => 0, {2, 1} => 0, {2, 2} => 0}
+    iex> Advent.DaySix.turn_off_lights_v2(%{ {2,3} => 1, {0,1} => 1 }, {0,0}, {1,1})
+    %{{0, 0} => 0, {0, 1} => 0, {1, 0} => 0, {1, 1} => 0, {2, 3} => 1}
+    iex> Advent.DaySix.turn_off_lights_v2(%{ {0,0} => 0, {0,1} => 1 }, {0,0}, {1,1})
+    %{{0, 0} => 0, {0, 1} => 0, {1, 0} => 0, {1, 1} => 0}
+    iex> Advent.DaySix.turn_off_lights_v2(%{ {0,0} => 3, {0,1} => 9 }, {0,0}, {1,1})
+    %{{0, 0} => 2, {0, 1} => 8, {1, 0} => 0, {1, 1} => 0}
+  """
+  def turn_off_lights_v2(grid, {startx,starty}, {endx,endy}) do
+    for x <- startx..endx, y <- starty..endy, into: grid, do: { {x,y} , [(grid[{x,y}] || 0) - 1, 0] |> Enum.max }
+  end
+
+  @doc """
+  Toggles lights by increasing the brightness by 2
+  ## Examples
+    iex> Advent.DaySix.toggle_lights_v2(%{}, {0,0}, {1,1})
+    %{{0, 0} => 2, {0, 1} => 2, {1, 0} => 2, {1, 1} => 2}
+    iex> Advent.DaySix.toggle_lights_v2(%{ {0,0} => 1, {0,1} => 0 }, {0,0}, {1,1})
+    %{{0, 0} => 3, {0, 1} => 2, {1, 0} => 2, {1, 1} => 2}
+  """
+  def toggle_lights_v2(grid, {startx,starty}, {endx,endy}) do
+    for x <- startx..endx, y <- starty..endy, into: grid, do: { {x,y} , (grid[{x,y}] || 0) + 2}
+  end
+
+  def count_lights_with_file_v2(filename) do
+    File.stream!(filename)
+    |> Stream.map(&(_to_commands(&1)))
+    |> Enum.reduce(%{}, fn instruction, grid ->
+      case instruction do
+        {:toggle, [start_point, end_point]} -> toggle_lights_v2(grid, start_point, end_point)
+        {:turn_on, [start_point, end_point]} -> turn_on_lights_v2(grid, start_point, end_point)
+        {:turn_off, [start_point, end_point]} -> turn_off_lights_v2(grid, start_point, end_point)
+      end
+    end)
+    |> count_lights_v2
+  end
+
+  @doc """
+  Returns number of lights lit in grid
+  ## Examples
+    iex> Advent.DaySix.count_lights_v2(%{{0, 0} => 2, {0, 1} => 3, {0, 2} => 0})
+    5
+    iex> Advent.DaySix.count_lights_v2(%{{0, 0} => 0, {0, 1} => 12, {0, 2} => 10})
+    22
+    iex> Advent.DaySix.count_lights_v2(%{{0, 0} => 1})
+    1
+  """
+  def count_lights_v2(grid) do
+    grid |> Map.values |> Enum.reduce(0, &(&1 + &2))
+  end
 end

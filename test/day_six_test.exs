@@ -5,6 +5,9 @@ defmodule Advent.DaySixTest do
   test "should return correct light for problem" do
     assert 569999 == Advent.DaySix.count_lights_with_file("problem_inputs/day_six_problem.txt")
   end
+  test "should return correct light for problem v2" do
+    assert 17836115 == Advent.DaySix.count_lights_with_file_v2("problem_inputs/day_six_problem.txt")
+  end
 
   test "should return correct lights for scenario 1 by hand" do
     grid = Advent.DaySix.toggle_lights(%{}, {0,0}, {2,0})
@@ -35,5 +38,22 @@ defmodule Advent.DaySixTest do
   end
   test "should return correct lights for scenario 2 with file" do
     assert 21 == Advent.DaySix.count_lights_with_file("problem_inputs/day_six_scenario2.txt")
+  end
+
+  test "should return correct lights for scenario 1 by hand v2" do
+    grid = Advent.DaySix.toggle_lights_v2(%{}, {0,0}, {2,0})
+    assert 6 == Advent.DaySix.count_lights_v2(grid)
+    
+    grid = Advent.DaySix.toggle_lights_v2(grid, {0,0}, {1,2})
+    assert 18 == Advent.DaySix.count_lights_v2(grid)
+
+    grid = Advent.DaySix.turn_off_lights_v2(grid, {0,1}, {2,1})
+    assert 16 == Advent.DaySix.count_lights_v2(grid)
+
+    grid = Advent.DaySix.turn_on_lights_v2(grid, {1,1}, {2,2})
+    assert 20 == Advent.DaySix.count_lights_v2(grid)
+  end
+  test "should return correct lights for scenario 1 with file v2" do
+    assert 20 == Advent.DaySix.count_lights_with_file_v2("problem_inputs/day_six_scenario1.txt")
   end
 end
