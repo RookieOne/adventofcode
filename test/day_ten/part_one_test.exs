@@ -7,10 +7,17 @@ defmodule Advent.DayTen.PartOneTest do
 
     assert result == 6
   end
-  test "should return length of result for problem" do
+  
+  test "should return length of result for problem 1" do
     result = Advent.DayTen.PartOne.process(number: "1113222113", process_times: 40)
 
     assert result == 252594
+  end
+
+  test "should return length of result for problem 2" do
+    result = Advent.DayTen.PartOne.process(number: "1113222113", process_times: 50)
+
+    assert result == 3579328
   end
 
 end
