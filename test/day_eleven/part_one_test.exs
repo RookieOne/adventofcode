@@ -7,6 +7,7 @@ defmodule Advent.DayEleven.PartOneTest do
 
     assert new_password == "hxbxxyzz"
   end
+
   test "should return new password for problem input part 2" do
     new_password = Advent.DayEleven.PartOne.next_password("hxbxxyzz")
 
